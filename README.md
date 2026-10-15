@@ -2,7 +2,7 @@
 
 ## Gambaran proyek
 
-Proyek ini menganalisis korpus berita daring Indonesia dari dataset [Indonesian Political News (Cleaned)](https://huggingface.co/datasets/ardimardiana/indonesian-political-news-clean) menggunakan Polars Lazy API, DuckDB SQL, dan Plotly. Tujuan analisis adalah menggambarkan sebaran publikasi menurut waktu, domain media, label wilayah, dan panjang isi artikel. Hasilnya adalah **deskripsi korpus**, bukan pengukuran representatif terhadap seluruh pemberitaan politik Indonesia.
+Proyek ini menganalisis korpus berita daring Indonesia dari dataset [Indonesian Political News (Cleaned)](https://huggingface.co/datasets/ardimardiana/indonesian-political-news-clean) menggunakan Polars Lazy API, DuckDB SQL, dan Plotly. Tujuan analisis adalah menggambarkan sebaran publikasi menurut waktu, domain media, label wilayah, dan panjang isi artikel. Hasilnya adalah**deskripsi korpus**, bukan pengukuran representatif terhadap seluruh pemberitaan politik Indonesia.
 
 ## Status pengerjaan
 
