@@ -1,6 +1,6 @@
 # Dokumentasi Dataset — Indonesian Political News (Cleaned)
 
-## Identitas
+## Identitass
 
 | Aspek | Keterangan |
 |---|---|
