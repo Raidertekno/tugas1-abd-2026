@@ -1,40 +1,61 @@
-# Data Tugas 1
+# Dokumentasi Dataset — Indonesian Political News (Cleaned)
 
-## Dataset yang Dipilih
+## Identitas
 
-Isi informasi berikut sebelum Milestone 1.
-
-| Item | Isi |
+| Aspek | Keterangan |
 |---|---|
-| Nama dataset | `[isi nama dataset]` |
-| Sumber | `[URL BPS / Satu Data Indonesia / BMKG / HuggingFace / Kaggle]` |
-| Lisensi/ketentuan pakai | `[isi]` |
-| Ukuran | `[>= 500 MB atau > 1.000.000 baris]` |
-| Periode data | `[isi]` |
-| Unit analisis | `[isi]` |
+| Nama | Indonesian Political News (Cleaned) |
+| Penyedia | ardimardiana (Hugging Face) |
+| Sumber | https://huggingface.co/datasets/ardimardiana/indonesian-political-news-clean |
+| DOI | https://doi.org/10.57967/hf/9063 |
+| Lisensi yang tercantum pada halaman dataset | CC BY-SA 4.0 |
+| Format | Parquet |
+| Bahasa | Indonesia |
+| Ukuran/jumlah baris | Sekitar 5,45 GB / 1,63 juta baris menurut metadata saat persiapan. **Verifikasi ulang dari file lokal.** |
+| Unit analisis | Satu artikel berita dalam korpus |
 
-## Tempat Mencari Dataset
+Dataset merupakan versi yang telah dibersihkan oleh penyedia. Proyek ini tetap menjalankan audit data quality tambahan dengan Polars dan DuckDB.
 
-Pilih dataset Indonesia yang legal digunakan, dapat didokumentasikan sumbernya, dan memenuhi batas ukuran tugas.
+## Kolom sumber
 
-| Situs | Kegunaan |
-|---|---|
-| [Satu Data Indonesia](https://data.go.id/) | Portal data terbuka lintas instansi pemerintah Indonesia. |
-| [Badan Pusat Statistik](https://www.bps.go.id/) | Statistik sosial, ekonomi, kependudukan, dan data wilayah. |
-| [BMKG Data Online](https://dataonline.bmkg.go.id/) | Data cuaca, iklim, gempa bumi, dan observasi meteorologi. |
-| [Hugging Face Datasets](https://huggingface.co/datasets) | Dataset publik yang dapat dicari berdasarkan topik, bahasa, atau ukuran. |
-| [Kaggle Datasets](https://www.kaggle.com/datasets) | Katalog dataset publik; periksa lisensi dan dokumentasi pembuatnya. |
-| [Google Dataset Search](https://datasetsearch.research.google.com/) | Mesin pencari untuk menemukan dataset dari berbagai portal. |
+Dataset menampilkan 15 atribut: `id`, `news_title`, `news_source`, `news_author`, `news_hostname`, `news_date`, `news_text`, `news_tags`, `news_kabkot`, `news_intent`, `news_image`, `update_date`, `create_date`, `news_guid`, dan `news_raw_data` pada Data Studio. Kolom `news_intent` dan `news_raw_data` dapat berisi informasi kompleks. Analisis proyek menggunakan subset yang relevan untuk menghemat RAM.
 
-## Cara Memperoleh Data
+## Unduh ulang di Windows CMD
 
-1. Buka URL sumber di atas.
-2. Unduh file ke folder `data/raw/` tanpa mengubah data mentah.
-3. Catat nama file dan checksum bila tersedia.
-4. Ubah variabel `DATA_PATH` pada `notebooks/01_data_profiling.ipynb` agar menunjuk ke file tersebut.
+Dari root repository, jalankan instalasi yang diperlukan:
 
-## Aturan Penyimpanan
+```cmd
+python -m pip install huggingface_hub
+```
 
-- Jangan commit dataset mentah atau hasil olahan berukuran besar ke Git.
-- File pada `data/raw/` adalah data asli dan tidak boleh diubah.
-- Simpan hasil transformasi yang dapat direproduksi pada `data/processed/`.
+Kemudian unduh file Parquet:
+
+```cmd
+python -c "from huggingface_hub import snapshot_download; snapshot_download(repo_id='ardimardiana/indonesian-political-news-clean', repo_type='dataset', local_dir='data/raw/indonesian-political-news-clean', allow_patterns='data/*.parquet', max_workers=3)"
+```
+
+Lokasi target:
+
+```text
+data/raw/indonesian-political-news-clean/data/*.parquet
+```
+
+Notebook mencari `.parquet` secara rekursif. Jika dataset sudah ada di folder lain (`C:\Users\...\bigdata_teman` atau Google Drive), sesuaikan `DATASET_DIR_OVERRIDE` di sel konfigurasi notebook 01 dan 02. Jangan memindahkan hasil cleaning ke `data/raw/`.
+
+## Validasi kelengkapan
+
+```cmd
+python src/inspect_data.py
+```
+
+Cocokkan total file, baris aktual dan ukuran yang ditampilkan notebook 01 dengan metadata versi dataset yang diunduh. **Jangan menuliskan angka aktual sebelum Run All selesai.**
+
+## Penyimpanan dan atribusi
+
+- `data/raw/`: file asli Parquet, jangan dimodifikasi.
+- `data/processed/`: hasil cleaning untuk EDA, dibangun oleh notebook 02.
+- Raw/processed dikecualikan dari Git melalui `.gitignore`.
+- Data mentah tidak dicopy ke Docker image melalui `.dockerignore`. Saat container jalan, volume mount menampilkan data lokal.
+- Periksa kondisi lisensi dan atribusikan penyedia serta sumber asal sebelum redistribusi. Lisensi dataset tercantum CC BY-SA 4.0, sedangkan isi artikel pihak ketiga mungkin mempunyai hak penggunaan tersendiri.
+- `news_kabkot` merupakan label atribut dataset, **tidak boleh ditafsirkan sebagai lokasi aktual artikel tanpa validasi lebih lanjut**.
+- Informasi publikasi dan periode data mengikuti metadata sumber dan hasil profiling aktual, bukan asumsi semua artikel berada pada satu tahun.

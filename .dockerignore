@@ -1,0 +1,11 @@
+data/raw/
+data/processed/
+output/
+.venv/
+venv/
+.git/
+.github/
+.ipynb_checkpoints/
+__pycache__/
+*.pyc
+*.zip

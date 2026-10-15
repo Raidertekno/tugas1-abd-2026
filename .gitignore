@@ -1,29 +1,31 @@
-# Python
-__pycache__/
-*.py[cod]
-*.so
-.Python
+# Data asli dan hasil olahan besar
+/data/raw/**
+/data/processed/**
+!/data/raw/.gitkeep
+!/data/processed/.gitkeep
+# Plotly HTML bisa dibuat ulang, file ringkasan kecil dapat dipilih untuk commit
+/output/figures/**
+!/output/figures/.gitkeep
+# Python/Jupyter
 .venv/
 venv/
-env/
-.env
-
-# Jupyter
+__pycache__/
+*.py[cod]
 .ipynb_checkpoints/
-
-# Data besar: simpan petunjuk unduh di data/README.md, bukan file data di Git
-data/raw/*
-!data/raw/.gitkeep
-data/processed/*
-!data/processed/.gitkeep
-
-# Output hasil analisis dan visualisasi
-output/figures/*
-!output/figures/.gitkeep
-output/*.csv
-output/*.parquet
-output/*.json
-
-# Sistem operasi dan editor
+.env
 .DS_Store
 .vscode/
+
+# Virtual environment
+.venv/
+venv/
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+
+# Dataset besar
+data/raw/
+data/processed/
+
+# File rahasia
+.env

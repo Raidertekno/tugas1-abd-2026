@@ -1,0 +1,14 @@
+{
+  "dataset": "ardimardiana/indonesian-political-news-clean",
+  "baris_awal": 1628288,
+  "baris_tidak_memenuhi_syarat_wajib": 84345,
+  "baris_duplikasi_kunci": 286,
+  "baris_akhir": 1543657,
+  "wilayah_kosong_sebelum_cleaning": 0,
+  "penulis_kosong_sebelum_cleaning": 149514,
+  "tanggal_invalid": 84332,
+  "batas_outlier_panjang_teks": 6907.0,
+  "outlier_panjang_teks_ditandai": 6953,
+  "kebijakan_outlier": "ditandai, tidak dibuang",
+  "tanggal_eksekusi_utc": "2026-10-15T08:48:37.557488+00:00"
+}

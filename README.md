@@ -1,236 +1,132 @@
-# Tugas 1: Eksplorasi dan Analisis Dataset Besar Indonesia
+# Tugas 1 Analisis Big Data — Indonesian Political News
 
-Template untuk Tugas 1 mata kuliah Analisis Big Data. Setelah repository GitHub Classroom dibuat, ubah nama repository menjadi `tugas1-[username_github]`.
+## Gambaran proyek
 
-## Milestone
+Proyek ini menganalisis korpus berita daring Indonesia dari dataset [Indonesian Political News (Cleaned)](https://huggingface.co/datasets/ardimardiana/indonesian-political-news-clean) menggunakan Polars Lazy API, DuckDB SQL, dan Plotly. Tujuan analisis adalah menggambarkan sebaran publikasi menurut waktu, domain media, label wilayah, dan panjang isi artikel. Hasilnya adalah **deskripsi korpus**, bukan pengukuran representatif terhadap seluruh pemberitaan politik Indonesia.
 
-| Tahap | Target | Bukti yang dikumpulkan |
+## Status pengerjaan
+
+| Milestone | Deliverable | Status |
 |---|---|---|
-| Milestone 1 | Pertemuan 3 | Dataset >= 500 MB atau > 1 juta baris, `data/README.md`, dan `notebooks/01_data_profiling.ipynb` |
-| Milestone 2 | Pertemuan 5 | Cleaning dengan Polars dan profiling DuckDB `SUMMARIZE` |
-| Milestone 3 | Pertemuan 8 | Analisis temporal/ruang dan minimal 6 visualisasi interaktif |
-| Final | Pertemuan 10 | Minimal 5 insight, Dockerfile, dan dokumentasi akhir |
+| 1 | Dataset >=500 MB atau >1 juta baris, data/README.md, notebook profiling | **Kode tersedia, hasil Run All perlu diverifikasi** |
+| 2 | Data quality, cleaning Polars dan DuckDB `SUMMARIZE` | **Kode tersedia, hasil Run All perlu diverifikasi** |
+| 3 | Analisis waktu/wilayah dan 6+ grafik interaktif | **Kode 8 grafik tersedia, hasil Run All perlu diverifikasi** |
+| Final | 5+ insight, reproducibility, Docker | **Insight dihitung otomatis, Docker perlu diuji** |
 
-## Output yang Diharapkan
+Jangan ubah status menjadi selesai sebelum pengujian sendiri pada data asli dan commit bertahap.
 
-Pada final submission, repository harus menghasilkan analisis yang dapat dijalankan ulang dari awal dan memuat:
+## Dataset
 
-- Dataset Indonesia yang terdokumentasi, berukuran minimal 500 MB atau lebih dari 1 juta baris, beserta instruksi unduhnya.
-- Notebook profiling, cleaning, serta EDA yang dapat dieksekusi berurutan.
-- Cleaning dan validasi data untuk missing values, duplikasi, outlier, serta aturan kualitas yang relevan dengan dataset.
-- Analisis temporal atau spasial, minimal 6 visualisasi interaktif dengan Plotly atau Altair, dan minimal 5 insight analitik yang didukung hasil analisis.
-- Environment yang dapat direproduksi melalui `Dockerfile`, `requirements.txt`, dan petunjuk eksekusi di README.
-- Riwayat commit bertahap yang menunjukkan proses kerja pada setiap milestone.
+- Nama: Indonesian Political News (Cleaned)
+- Sumber: https://huggingface.co/datasets/ardimardiana/indonesian-political-news-clean
+- DOI: https://doi.org/10.57967/hf/9063
+- Lisensi pada halaman dataset: CC BY-SA 4.0
+- Format: Parquet
+- Metadata sumber: sekitar 1,63 juta baris, ukuran unduh beberapa GB. Angka final mengikuti notebook profiling lokal.
+- Kolom penting: `news_title`, `news_text`, `news_hostname`, `news_date`, `news_kabkot`.
 
-## Kaitan dengan Materi Perkuliahan
+Informasi cara unduh, atribut dan lisensi selengkapnya ada di [data/README.md](data/README.md).
 
-| Materi | Pertemuan | Penerapan pada Tugas 1 |
-|---|:---:|---|
-| Polars dan lazy evaluation | 2 | Profiling dan transformasi dataset besar dengan `scan_*`, expressions, dan pipeline efisien. |
-| DuckDB dan format data | 3 | Query analitik serta profiling dengan `SUMMARIZE`; gunakan Parquet bila sesuai. |
-| Data quality dan cleaning | 4 | Tangani missing values, duplikasi, outlier, dan validasi data. |
-| EDA dan visualisasi | 5 | Bangun visualisasi interaktif serta rumuskan insight analitik. |
-| Time series | 6 | Terapkan analisis pola waktu atau pola spasial yang relevan dengan dataset. |
-| Dask, NLP, dan ML | 7-9 | Opsional sebagai pengembangan jika relevan dengan skala dan pertanyaan analisis. |
-| Streamlit dan Docker | 10-11 | Dokumentasikan environment Docker; dashboard Streamlit bersifat opsional untuk Tugas 1. |
-
-## Ringkasan Penilaian
-
-Nilai Tugas 1 berbobot 25% dari nilai akhir. Penilaian lengkap ada di dokumen spesifikasi tugas; ringkasannya sebagai berikut.
-
-| Aspek | Bobot | Indikator utama |
-|---|:---:|---|
-| Konsistensi commit dan GitHub workflow | 20% | Commit bertahap, pesan deskriptif, struktur repository rapi, dan pemeriksaan otomatis lulus. |
-| Data handling dengan Polars dan DuckDB | 25% | Pengolahan data besar efisien, memakai Polars dan DuckDB sesuai peran masing-masing. |
-| Cleaning dan data quality | 15% | Profiling, validasi, serta penanganan null dan outlier terdokumentasi. |
-| Visualisasi dan insight | 25% | Visualisasi interaktif informatif dan insight analitik yang didukung data. |
-| Reproduktivitas dan Docker | 15% | Dockerfile, dependency, dan instruksi eksekusi memungkinkan proyek dijalankan ulang. |
-
-Target kualitas tertinggi adalah analisis yang efisien, terdokumentasi, dapat direproduksi, dan memperlihatkan proses kerja konsisten sepanjang milestone; bukan hanya hasil akhir yang terlihat baik.
-
-## Struktur Repository
+## Struktur repository
 
 ```text
 .
 ├── .github/workflows/lint_check.yml
-├── data/README.md
+├── data/
+│   ├── README.md
+│   ├── raw/                        # file tidak di-commit
+│   └── processed/                  # hasil cleaning tidak di-commit
 ├── notebooks/
 │   ├── 01_data_profiling.ipynb
 │   ├── 02_data_cleaning.ipynb
 │   └── 03_eda_and_insights.ipynb
-├── output/figures/
-├── src/
-├── Dockerfile
+├── output/
+│   ├── figures/                    # grafik HTML interaktif lokal
+│   └── tables/                     # laporan kualitas dan insight
+├── src/inspect_data.py
+├── .gitignore
+├── .dockerignore
 ├── requirements.txt
+├── Dockerfile
 └── README.md
 ```
 
-# Tugas 1 Analisis Big Data 2026
+## Alur analisis
 
-## Persiapan GitHub
+1. **Profiling**: scan Parquet, verifikasi baris dan ukuran, schema, null/kosong, tanggal, pola kategori, panjang teks, kandidat duplikasi.
+2. **Cleaning**: judul/isi wajib cukup panjang, tanggal dapat diparse, normalisasi host/judul, hapus duplikasi berdasarkan host+judul+tanggal, isi wilayah kosong menjadi `Tidak tersedia`. Outlier panjang teks ditandai, bukan dibuang. Hasil disimpan `data/processed/political_news_analysis.parquet` dengan `sink_parquet`.
+3. **EDA**: 8 grafik Plotly untuk tren harian dan bulanan, domain, wilayah, hari mingguan, kelompok panjang artikel, domain per tahun dan outlier. Minimal 7 insight ditulis otomatis ke `output/tables/insights.md` ketika dieksekusi.
 
-### 1. Fork Repository Tugas
+**Aturan cleaning bersifat pilihan operasional** yang perlu dievaluasi terhadap data. Normalisasi/kunci dedup bisa menghapus artikel berbeda dengan judul sama pada hari dan situs yang sama. Dataset sumber sudah berstatus *cleaned*, sehingga cleaning di sini adalah audit dan penyesuaian untuk studi.
 
-Fork repository berikut ke akun GitHub masing-masing:
+## Menjalankan secara lokal (Windows CMD)
 
-https://github.com/UMM-GURU/tugas1-abd-2026.git
+Masuk ke folder repository:
 
-Langkah-langkah:
-
-1. Login ke GitHub.
-2. Buka repository tugas.
-3. Klik tombol **Fork** di pojok kanan atas.
-4. Tunggu hingga GitHub membuat salinan repository ke akun Anda.
-
-Setelah selesai, Anda akan memiliki repository dengan alamat seperti:
-
-```text
-https://github.com/USERNAME-ANDA/tugas1-abd-2026.git
+```cmd
+cd /d "C:\path\ke\repository-teman"
+python -m venv .venv
+.venv\Scripts\activate
+python -m pip install -r requirements.txt
+python -m jupyter lab
 ```
 
----
+Di JupyterLab jalankan ketiga file `.ipynb` secara **berurutan**. Dataset harus ada di `data/raw/indonesian-political-news-clean/` atau atur `DATASET_DIR_OVERRIDE` bila disimpan di lokasi lain. Gunakan **Kernel → Restart Kernel and Run All Cells** setiap notebook.
 
-### 2. Clone Repository Hasil Fork
+## Menjalankan melalui Docker
 
-Buka Terminal, Git Bash, atau Command Prompt lalu jalankan:
+```cmd
+docker build -t bigdata-politik .
+docker run --rm -p 8888:8888 -v "%cd%:/workspace" bigdata-politik
+```
+
+Untuk Linux/Ubuntu, volume mount-nya:
 
 ```bash
-git clone https://github.com/USERNAME-ANDA/tugas1-abd-2026.git
-cd tugas1-abd-2026
+docker run --rm -p 8888:8888 -v "$(pwd):/workspace" bigdata-politik
 ```
 
-Ganti `USERNAME-ANDA` dengan username GitHub Anda.
+Buka `http://localhost:8888/lab`. Konfigurasi Jupyter tanpa password/token **hanya untuk penggunaan lokal**. Jangan publikasikan port 8888 di jaringan publik. Data tidak ada dalam image, tetapi tersedia saat mount folder repo.
 
----
+## Memakai Google Colab
 
-## Menjalankan Project
-
-Pastikan Docker sudah terpasang pada komputer Anda.
-
-### Build Docker Image
-
-```bash
-docker build -t tugas1-bigdata .
-```
-
-### Jalankan Container
-
-```bash
-docker run --rm -p 8888:8888 -v "$(pwd)":/home/jovyan/work tugas1-bigdata
-```
-
-### Membuka JupyterLab
-
-Buka browser dan akses:
-
-http://localhost:8888/lab
-
-> **Catatan:** Konfigurasi Dockerfile menjalankan JupyterLab tanpa password atau token untuk penggunaan lokal. Jangan gunakan konfigurasi ini pada server atau jaringan publik.
-
----
-
-## Menyiapkan Dataset
-
-1. Letakkan dataset yang akan digunakan pada folder:
-
-```text
-data/raw/
-```
-
-2. Buka notebook profiling atau notebook yang digunakan.
-3. Sesuaikan nilai variabel `DATA_PATH` agar mengarah ke file dataset yang Anda gunakan.
-
-Contoh:
+Upload ketiga notebook ke Colab. Karena dataset berukuran besar, simpan Parquet mentah di Google Drive dan mount Drive terlebih dahulu:
 
 ```python
-DATA_PATH = "data/raw/nama_dataset.csv"
+from google.colab import drive
+drive.mount('/content/drive')
 ```
 
----
+Atur `DATASET_DIR_OVERRIDE` pada notebook 01 dan 02 ke folder Parquet di Drive. Sebelum EDA, pastikan output notebook 02 tersedia sebagai Parquet dan setel `PROCESSED_FILE_OVERRIDE` pada notebook 03. Runtime Colab dapat berbeda dan penyimpanannya sementara. Untuk dataset lebih dari 5 GB, kemampuan RAM/Drive Colab bisa menjadi keterbatasan, jalankan lokal atau Docker bila perlu.
 
-## Mengerjakan Tugas
+## Data quality dan keterbatasan
 
-1. Baca seluruh instruksi yang terdapat pada notebook.
-2. Kerjakan setiap bagian sesuai perintah.
-3. Simpan perubahan secara berkala.
+- Periksa hasil jumlah baris aktual dan jumlah data yang ditolak secara transparan.
+- Artikel dengan wilayah `Tidak tersedia` tetap digunakan, tetapi interpretasi spasial dibatasi pada label metadata.
+- Artikel outlier menurut panjang teks tidak otomatis dianggap salah.
+- Variasi domain dan tanggal bisa dipengaruhi proses koleksi dan kelengkapan sumber.
+- Proses cleaning menghasilkan tabel analisis terpilih; berkas mentah tetap disimpan terpisah.
+- Grafik HTML memakai pustaka Plotly dari CDN saat dibuka di luar notebook dan mungkin membutuhkan internet.
 
----
+## Referensi teknis
 
-## Commit Perubahan
-
-Setelah tugas selesai dikerjakan, simpan hasil pekerjaan ke Git menggunakan perintah berikut:
-
-```bash
-git add .
-git commit -m "Menyelesaikan Tugas 1 Analisis Big Data"
-```
-
-Anda dapat mengganti pesan commit sesuai kebutuhan.
-
----
-
-## Push ke Repository GitHub
-
-Kirim hasil pekerjaan ke repository GitHub milik Anda:
-
-```bash
-git push origin main
-```
-
-Apabila branch utama bernama `master`, gunakan:
-
-```bash
-git push origin master
-```
-
----
-
-## Verifikasi Pengumpulan
-
-1. Buka repository GitHub milik Anda.
-2. Pastikan file yang telah dikerjakan sudah muncul.
-3. Pastikan terdapat minimal satu commit hasil pekerjaan Anda.
-4. Salin URL repository Anda untuk keperluan penilaian jika diminta dosen.
-
-Contoh URL repository:
-
-```text
-https://github.com/USERNAME-ANDA/tugas1-abd-2026
-```
-
----
-
-## Menjalankan Project
-
-```bash
-docker build -t tugas1-bigdata .
-docker run --rm -p 8888:8888 -v "$(pwd)":/home/jovyan/work tugas1-bigdata
-```
-
-Buka JupyterLab pada `http://localhost:8888/lab`. Konfigurasi Dockerfile menjalankan JupyterLab tanpa password atau token untuk penggunaan lokal. Jangan gunakan konfigurasi ini pada server atau jaringan publik. Letakkan dataset pada `data/raw/`, lalu sesuaikan `DATA_PATH` di notebook profiling.
-
-## Aturan Teknis
-
-- Gunakan Polars untuk manipulasi data dan DuckDB untuk analitik SQL.
-- Dataset harus minimal 500 MB atau lebih dari 1 juta baris.
-- Jangan commit file data besar; simpan instruksi unduhan dan sumber data pada `data/README.md`.
-- Gunakan commit bertahap dan pesan yang jelas, misalnya `feat: add initial dataset profiling`.
-
-## Integritas Akademik dan Penggunaan AI
-
-- Dilarang menyalin kode, laporan, atau visualisasi mahasiswa lain maupun repository publik tanpa sitasi dan atribusi yang jelas.
-- Dilarang menggunakan jasa joki atau menyerahkan pekerjaan yang tidak dapat dijelaskan sendiri.
-- AI boleh digunakan untuk belajar, mencari rujukan, menjelaskan konsep, atau debugging. AI tidak menggantikan tanggung jawab mahasiswa atas kebenaran dan kualitas solusi.
-- Mahasiswa wajib dapat menjelaskan setiap bagian kode, menjalankan serta memverifikasi ulang hasilnya, dan memastikan penggunaan Polars serta DuckDB sesuai standar kuliah.
-- Setiap penggunaan AI harus dicantumkan pada bagian AI Disclosure Statement di bawah.
-- Pelanggaran pertama bernilai 0 untuk tugas terkait; pelanggaran berikutnya dapat berakibat nilai E untuk mata kuliah sesuai ketentuan akademik.
+- Dataset: https://huggingface.co/datasets/ardimardiana/indonesian-political-news-clean
+- Polars Lazy API: https://docs.pola.rs/user-guide/concepts/lazy-api/
+- DuckDB Parquet: https://duckdb.org/docs/stable/data/parquet/overview
+- DuckDB SUMMARIZE: https://duckdb.org/docs/stable/sql/statements/summarize
+- Plotly Python: https://plotly.com/python/
 
 ## AI Disclosure Statement
 
-Isi bagian ini sebelum pengumpulan akhir.
+**Alat AI:** ChatGPT.
 
-> Alat AI yang digunakan: [nama alat].
->
-> Bagian yang dibantu: [contoh: penjelasan error Polars atau review dokumentasi].
->
-> Verifikasi yang dilakukan: [contoh: menjalankan ulang kode, memeriksa dokumentasi resmi, dan memahami setiap cell].
+**Bagian yang dibantu:** bantuan penyusunan kerangka proyek, contoh kode Polars/DuckDB/Plotly, dokumentasi, serta rancangan validasi kualitas data. Penggunaan ini wajib disesuaikan dengan pekerjaan yang benar-benar dilakukan.
+
+**Verifikasi oleh mahasiswa:** isi setelah pengujian, meliputi versi library, jumlah baris yang dihasilkan, pemeriksaan keluaran tiga notebook, pengujian Docker, review tiap cell, serta commit bertahap di repository pribadi. Jangan mengklaim pengujian yang belum terjadi.
+
+## Identitas mahasiswa
+
+- Nama: **[isi nama pemilik repo]**
+- NIM: **[isi NIM pemilik repo]**
+- GitHub: **[isi username pemilik repo]**
+
