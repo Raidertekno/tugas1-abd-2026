@@ -126,7 +126,7 @@ Atur `DATASET_DIR_OVERRIDE` pada notebook 01 dan 02 ke folder Parquet di Drive. 
 
 ## Identitas mahasiswa
 
-- Nama: **[isi nama pemilik repo]**
-- NIM: **[isi NIM pemilik repo]**
-- GitHub: **[isi username pemilik repo]**
+- Nama: **Adriansyah Pratama**
+- NIM: **202310370311481**
+- GitHub: **Raidertekno**
 
